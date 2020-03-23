@@ -1,0 +1,8 @@
+{
+    "env": {
+        "MONGO_USER":"langton",
+        "MONGO_PASSWORD":"langton3698",
+        "MONGO_DB":"my_db",
+        "CONNECT":"mongodb://localhost:27017/MyDb"
+    }
+}
