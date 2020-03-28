@@ -3,7 +3,10 @@ const Booking = require('../../models/booking');
 const {  bookingTemplate, eventsTemplate } = require('./combine') 
 
 module.exports = {
-        bookings: async () => {
+        bookings: async (args, req) => {
+            if(!req.isAuth) {
+                throw new Error('not authorised');
+            }
            try {
                 const bookings = await Booking.find();
                 return bookings.map(booking => {
@@ -14,16 +17,22 @@ module.exports = {
            }
         },
        
-    bookEvent: async args => {
+    bookEvent: async (args, req) => {
+        if(!req.isAuth) {
+            throw new Error('not authorised');
+        }   
         const fetchedEvent = await Event.findOne( {_id: args.eventId });
         const booking = new Booking({
-          user:'5e7d24e1670207217bd2a598',
+          user:req.userId,
           event: fetchedEvent    
         });
         const result = await booking.save();
         return bookingTemplate(result); 
     },
-    cancelBooking: async args => {
+    cancelBooking: async (args,req) => {
+        if(!req.isAuth) {
+            throw new Error('not authorised');
+        }
         try {
             const booking =  await Booking.findById(args.bookingId).populate('event');
             const event = eventsTemplate(booking.event);
