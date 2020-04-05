@@ -19,7 +19,7 @@ class App extends Component {
   };
 
   logout = () => {
-    this.setSstate({ token: null, userId: null });
+    this.setState({ token: null, userId: null });
   };
   render() {
     return (
@@ -37,6 +37,9 @@ class App extends Component {
             <main className="main-content">
               <Switch>
                 {!this.state.token && <Redirect from="/" to="/auth" exact />}
+                {!this.state.token && (
+                  <Redirect from="/booking" to="/auth" exact />
+                )}
                 {this.state.token && <Redirect from="/" to="/events" exact />}
                 {this.state.token && (
                   <Redirect from="/auth" to="/events" exact />

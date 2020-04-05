@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import authContext from "../context/authContext";
-
 import "./auth.css";
 
 class AuthPage extends Component {
   state = {
-    isLogin: true
+    isLogin: true,
   };
 
   static contextType = authContext;
@@ -18,11 +17,11 @@ class AuthPage extends Component {
   }
 
   switchHandler = () => {
-    this.setState(previousState => {
+    this.setState((previousState) => {
       return { isLogin: !previousState.isLogin };
     });
   };
-  submitHandler = event => {
+  submitHandler = (event) => {
     event.preventDefault();
     const email = this.emailEl.current.value;
     const password = this.passwordEl.current.value;
@@ -39,7 +38,7 @@ class AuthPage extends Component {
                     token
                 }
             }
-          `
+          `,
     };
     if (!this.state.isLogin) {
       reqQuery = {
@@ -50,7 +49,7 @@ class AuthPage extends Component {
                         email
                     }
                 }
-              `
+              `,
       };
     }
 
@@ -58,16 +57,16 @@ class AuthPage extends Component {
       method: "POST",
       body: JSON.stringify(reqQuery),
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
           throw new Error("failed");
         }
         return res.json();
       })
-      .then(resBody => {
+      .then((resBody) => {
         if (resBody.data.login.token) {
           this.context.login(
             resBody.data.login.token,
@@ -75,7 +74,7 @@ class AuthPage extends Component {
           );
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };

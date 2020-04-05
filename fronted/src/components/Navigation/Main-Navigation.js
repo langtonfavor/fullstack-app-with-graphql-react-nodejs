@@ -2,10 +2,9 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import authContext from "../../context/authContext";
 import "./mainNav.css";
-
-const mainNavigation = props => (
+const mainNavigation = (props) => (
   <authContext.Consumer>
-    {context => {
+    {(context) => {
       return (
         <header className="main-nav_section">
           <div className="main-nav_logo">
@@ -24,9 +23,14 @@ const mainNavigation = props => (
               </li>
 
               {context.token && (
-                <li>
-                  <NavLink to="/booking">Bookings</NavLink>
-                </li>
+                <React.Fragment>
+                  <li>
+                    <NavLink to="/booking">Bookings</NavLink>
+                  </li>
+                  <li>
+                    <button onClick={context.logout}>logout</button>
+                  </li>
+                </React.Fragment>
               )}
             </ul>
           </nav>

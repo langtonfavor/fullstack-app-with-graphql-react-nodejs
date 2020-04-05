@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav_items a,
+.main-nav_items button {
+  text-decoration: none;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  font: inherit;
+  background: transparent;
+  cursor: pointer;
+  vertical-align: middle;
+  margin: 0;
+}
+
+.form_control label,
+.form_control input {
+  width: 100%;
+  display: block;
+}
+.form_control label {
+  margin-bottom: 0.5rem;
+}
+
+.form_control {
+  margin-bottom: 1rem;
+}
+
+.form_actions button,
+.btn {
+  background-color: #3b3937;
+  font: inherit;
+  border: 1px solid #3b3937;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  margin: 0 1rem;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.26);
+  color: white;
+  cursor: pointer;
+}
+
+.form_actions button:hover,
+.form_actions button:active,
+.btn:hover,
+.btn:active {
+  color: #595762;
+  border-color: #595762;
+}
