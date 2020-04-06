@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "flow":"flow"	
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,7 @@
     "yarn": "^1.22.4"
   },
   "devDependencies": {
+    "flow-bin": "^0.122.0",
     "nodemon": "^1.19.1"
   }
 }

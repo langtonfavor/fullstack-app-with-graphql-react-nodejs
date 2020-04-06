@@ -17,7 +17,8 @@ body {
 }
 
 .form_control label,
-.form_control input {
+.form_control input,
+.form_control textarea {
   width: 100%;
   display: block;
 }
