@@ -1,8 +1,6 @@
 const Event = require("../../models/events");
 
-const User = require("../../models/user");
 const { eventsTemplate } = require("./combine");
-const isAuth = require("../../middleware/is-Auth");
 
 module.exports = {
   events: async () => {
@@ -12,21 +10,19 @@ module.exports = {
         return eventsTemplate(event);
       });
     } catch (err) {
-      return err;
+      throw err;
     }
   },
-
-  createEvent: async (args, req) => {
-    if (!req.isAuth) {
-      throw new Error("unAuthenticated");
-    }
+  createEvent: async (args) => {
     const event = new Event({
       title: args.eventInput.title,
       description: args.eventInput.description,
       price: +args.eventInput.price,
       date: new Date(args.eventInput.date),
-      creator: req.userId,
+      creator:req.userId,
     });
+    console.log(title);
+
     let createdEvent;
     try {
       const result = await event.save();
@@ -41,6 +37,7 @@ module.exports = {
 
       return createdEvent;
     } catch (err) {
+      console.log(err);
       throw err;
     }
   },

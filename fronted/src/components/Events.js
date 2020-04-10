@@ -1,14 +1,18 @@
 import React, { Component } from "react";
 
+import EventList from "../../../fronted/src/components/events/EventList/EventList"
 import Modal from "../components/modal/modal";
 import Backdrop from "../components/Backdrop/backdrop";
 import AuthContext from "../context/authContext";
+import Spinner from "../components/spinner/spinner"
 import "./events.css";
 
 class Events extends Component {
   state = {
     creating: false,
-    events: []
+    events: [],
+    isLoading: false,
+    selectedEvent: null
   };
 
   static contextType = AuthContext;
@@ -74,7 +78,20 @@ class Events extends Component {
         return res.json();
       })
       .then((resBody) => {
-        this.fetchEvents();
+        this.setState(prevState => {
+            const updatedEvents = [...prevState.events];
+            updatedEvents.push({
+                _id: resBody.data.createEvent._id,
+                title: resBody.data.createEvent.title,
+                description: resBody.data.createEvent.title,
+                date: resBody.data.createEvent.title,
+                price: resBody.data.createEvent.title,
+                // creator: {
+                //     _id: this.context.userId
+                // }
+            });
+            return {events: updatedEvents}
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -82,10 +99,11 @@ class Events extends Component {
   };
 
   modalCancelHandler = () => {
-    this.setState({ creating: false });
+    this.setState({ creating: false, selectedEvent:null });
   };
 
   fetchEvents() {
+      this.setState({isLoading: true});
       const reqBody = {
         query: `
                   query {
@@ -117,22 +135,28 @@ class Events extends Component {
         })
         .then((resBody) => {
           const events = resBody.data.events;
-          this.setState({events:events});
+          this.setState({events:events, isLoading: false});
         })
         .catch((err) => {
           console.log(err);
+          this.setState({isLoading: false});
         });
   }
 
-  render() {
-      const eventList = this.state.events.map(event => {
-         return <li key={event._id} className="events_list_item">
-             {event.title}</li>
+  showDetailHandler = (eventId) => {
+      this.setState(prevState => {
+          const selectedEvent = prevState.events.find(e => e._id === eventId);
+          return {selectedEvent: selectedEvent};
+      })
+  }
 
-      });
+  bookEvendHandler = () => {
+
+  }
+  render() {
     return (
       <React.Fragment>
-        {this.state.creating && <Backdrop />}
+        {this.state.creating || this.state.selectedEvent && <Backdrop />}
         {this.state.creating && (
           <Modal
             title="Add event"
@@ -140,6 +164,7 @@ class Events extends Component {
             onCancel={this.modalCancelHandler}
             canConfirm
             onConfirm={this.modalConfirmHandler}
+            confirmText="confirm"
           >
             <form>
               <div className="form_control">
@@ -165,13 +190,27 @@ class Events extends Component {
             </form>
           </Modal>
         )}
+        {this.state.selectedEvent && <Modal
+          title={this.state.selectedEvent.title}
+          canCancel
+          onCancel={this.modalCancelHandler}
+          canConfirm
+          onConfirm={this.bookEvendHandler}
+          confirmText="book"
+        >
+        <h1>{this.state.selectedEvent.title}</h1>
+        <h2>${this.state.selectedEvent.price} - {this.state.selectedEvent.date}</h2>
+        <p>{this.state.selectedEvent.description}</p>
+        </Modal>}
         {this.context.token && <div className="events-control">
           <p>Add events </p>
           <button className="btn" onClick={this.startCreateEventHandler}>
             Create Event
           </button>
       </div>}
-        <ul className="events_list">{eventList}</ul>
+      {this.state.isLoading ? <Spinner /> :
+          <EventList events={this.state.events}
+                     onViewDetail={this.showDetailHandler}/>}
       </React.Fragment>
     );
   }
