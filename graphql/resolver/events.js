@@ -31,7 +31,6 @@ module.exports = {
         throw new Error("User not found.");
       }
       creator.createdEvents.push(event);
-      console.log(event);
       await creator.save();
 
       return createdEvent;
