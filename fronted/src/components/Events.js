@@ -15,6 +15,8 @@ class Events extends Component {
     selectedEvent: null
   };
 
+  isActive = true;
+
   static contextType = AuthContext;
 
   constructor(props) {
@@ -134,12 +136,16 @@ class Events extends Component {
           return res.json();
         })
         .then((resBody) => {
+            if(this.isActive){
           const events = resBody.data.events;
           this.setState({events:events, isLoading: false});
+      }
         })
         .catch((err) => {
+            if(this.isActive){
           console.log(err);
           this.setState({isLoading: false});
+      }  
         });
   }
 
@@ -151,8 +157,48 @@ class Events extends Component {
   }
 
   bookEvendHandler = () => {
+      if(!this.context.token) {
+          this.setState({selectedEvent:null});
+          return;
+      }
+      const reqBody = {
+        query: `
+                  mutation {
 
+                    bookEvent(eventId: "${this.state.selectedEvent._id}") {
+                        _id
+                        createdAt
+                        updatedAt
+                      }
+                  }
+                `
+      };
+
+    fetch("http://localhost:3000/graphql", {
+        method: "POST",
+        body: JSON.stringify(reqBody),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "bearer " + this.context.token,
+        },
+    })
+    .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+            throw new Error("failed");
+          }
+          return res.json();
+        })
+        .then((resBody) => {
+          console.log(resBody);
+          this.setState({selectedEvent:null});
+        })
+        .catch((err) => {
+          console.log(err);
+        });
   }
+    componentWillUnmount() {
+     this.isActive = false;
+    }
   render() {
     return (
       <React.Fragment>
@@ -196,7 +242,7 @@ class Events extends Component {
           onCancel={this.modalCancelHandler}
           canConfirm
           onConfirm={this.bookEvendHandler}
-          confirmText="book"
+          confirmText={this.context.token ? "Book" : "Confirm"}
         >
         <h1>{this.state.selectedEvent.title}</h1>
         <h2>${this.state.selectedEvent.price} - {this.state.selectedEvent.date}</h2>

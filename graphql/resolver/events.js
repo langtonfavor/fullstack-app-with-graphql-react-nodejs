@@ -1,3 +1,4 @@
+
 const Event = require("../../models/events");
 
 const { eventsTemplate } = require("./combine");
@@ -21,8 +22,6 @@ module.exports = {
       date: new Date(args.eventInput.date),
       creator:req.userId,
     });
-    console.log(title);
-
     let createdEvent;
     try {
       const result = await event.save();
@@ -37,7 +36,7 @@ module.exports = {
 
       return createdEvent;
     } catch (err) {
-      console.log(err);
+      console.log(result);
       throw err;
     }
   },
