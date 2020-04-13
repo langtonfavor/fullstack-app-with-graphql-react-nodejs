@@ -11,11 +11,11 @@ import "./App.css";
 class App extends Component {
   state = {
     token: null,
-    userId: null
+    userId: null,
   };
 
   login = (token, userId) => {
-    this.setState({ token: token, userId: userId });
+    this.setState({ token, userId });
   };
 
   logout = () => {
@@ -30,7 +30,7 @@ class App extends Component {
               token: this.state.token,
               userId: this.state.userId,
               login: this.login,
-              logout: this.logout
+              logout: this.logout,
             }}
           >
             <MainNavigation />

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 
-import EventList from "../../../fronted/src/components/events/EventList/EventList"
+import EventList from "../../../fronted/src/components/events/EventList/EventList";
 import Modal from "../components/modal/modal";
 import Backdrop from "../components/Backdrop/backdrop";
 import AuthContext from "../context/authContext";
-import Spinner from "../components/spinner/spinner"
+import Spinner from "../components/spinner/spinner";
 import "./events.css";
 
 class Events extends Component {
@@ -12,7 +12,7 @@ class Events extends Component {
     creating: false,
     events: [],
     isLoading: false,
-    selectedEvent: null
+    selectedEvent: null,
   };
 
   isActive = true;
@@ -28,7 +28,7 @@ class Events extends Component {
   }
 
   componentDidMount() {
-     this.fetchEvents();
+    this.fetchEvents();
   }
 
   startCreateEventHandler = () => {
@@ -70,7 +70,7 @@ class Events extends Component {
       body: JSON.stringify(reqQuery),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "bearer " + token,
+        Authorization: `bearer ${token}`,
       },
     })
       .then((res) => {
@@ -80,19 +80,20 @@ class Events extends Component {
         return res.json();
       })
       .then((resBody) => {
-        this.setState(prevState => {
-            const updatedEvents = [...prevState.events];
-            updatedEvents.push({
-                _id: resBody.data.createEvent._id,
-                title: resBody.data.createEvent.title,
-                description: resBody.data.createEvent.title,
-                date: resBody.data.createEvent.title,
-                price: resBody.data.createEvent.title,
-                // creator: {
-                //     _id: this.context.userId
-                // }
-            });
-            return {events: updatedEvents}
+        this.setState((prevState) => {
+          const updatedEvents = [...prevState.events];
+          updatedEvents.push({
+            // eslint-disable-next-line no-underscore-dangle
+            _id: resBody.data.createEvent._id,
+            title: resBody.data.createEvent.title,
+            description: resBody.data.createEvent.title,
+            date: resBody.data.createEvent.title,
+            price: resBody.data.createEvent.title,
+            // creator: {
+            //     _id: this.context.userId
+            // }
+          });
+          return { events: updatedEvents };
         });
       })
       .catch((err) => {
@@ -101,13 +102,13 @@ class Events extends Component {
   };
 
   modalCancelHandler = () => {
-    this.setState({ creating: false, selectedEvent:null });
+    this.setState({ creating: false, selectedEvent: null });
   };
 
   fetchEvents() {
-      this.setState({isLoading: true});
-      const reqBody = {
-        query: `
+    this.setState({ isLoading: true });
+    const reqBody = {
+      query: `
                   query {
                     events {
                            _id
@@ -117,52 +118,53 @@ class Events extends Component {
                            price
                       }
                   }
-                `
-      };
+                `,
+    };
 
-      //const token = this.context.token;
+    // const token = this.context.token;
 
-      fetch("http://localhost:3000/graphql", {
-        method: "POST",
-        body: JSON.stringify(reqBody),
-        headers: {
-          "Content-Type": "application/json"
-        },
+    fetch("http://localhost:3000/graphql", {
+      method: "POST",
+      body: JSON.stringify(reqBody),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error("failed");
+        }
+        return res.json();
       })
-        .then((res) => {
-          if (res.status !== 200 && res.status !== 201) {
-            throw new Error("failed");
-          }
-          return res.json();
-        })
-        .then((resBody) => {
-            if(this.isActive){
+      .then((resBody) => {
+        if (this.isActive) {
           const events = resBody.data.events;
-          this.setState({events:events, isLoading: false});
-      }
-        })
-        .catch((err) => {
-            if(this.isActive){
+          this.setState({ events: events, isLoading: false });
+        }
+      })
+      .catch((err) => {
+        if (this.isActive) {
           console.log(err);
-          this.setState({isLoading: false});
-      }  
-        });
+          this.setState({ isLoading: false });
+        }
+      });
   }
 
   showDetailHandler = (eventId) => {
-      this.setState(prevState => {
-          const selectedEvent = prevState.events.find(e => e._id === eventId);
-          return {selectedEvent: selectedEvent};
-      })
-  }
+    this.setState((prevState) => {
+      // eslint-disable-next-line no-underscore-dangle
+      const selectedEvent = prevState.events.find((e) => e._id === eventId);
+      return { selectedEvent: selectedEvent };
+    });
+  };
 
   bookEvendHandler = () => {
-      if(!this.context.token) {
-          this.setState({selectedEvent:null});
-          return;
-      }
-      const reqBody = {
-        query: `
+    if (!this.context.token) {
+      this.setState({ selectedEvent: null });
+      return;
+    }
+    const reqBody = {
+      query: `
                   mutation {
 
                     bookEvent(eventId: "${this.state.selectedEvent._id}") {
@@ -171,38 +173,38 @@ class Events extends Component {
                         updatedAt
                       }
                   }
-                `
-      };
+                `,
+    };
 
     fetch("http://localhost:3000/graphql", {
-        method: "POST",
-        body: JSON.stringify(reqBody),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "bearer " + this.context.token,
-        },
+      method: "POST",
+      body: JSON.stringify(reqBody),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `bearer ${this.context.token}`,
+      },
     })
-    .then((res) => {
+      .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
-            throw new Error("failed");
-          }
-          return res.json();
-        })
-        .then((resBody) => {
-          console.log(resBody);
-          this.setState({selectedEvent:null});
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+          throw new Error("failed");
+        }
+        return res.json();
+      })
+      .then((resBody) => {
+        console.log(resBody);
+        this.setState({ selectedEvent: null });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  componentWillUnmount() {
+    this.isActive = false;
   }
-    componentWillUnmount() {
-     this.isActive = false;
-    }
   render() {
     return (
       <React.Fragment>
-        {this.state.creating || this.state.selectedEvent && <Backdrop />}
+        {this.state.creating || (this.state.selectedEvent && <Backdrop />)}
         {this.state.creating && (
           <Modal
             title="Add event"
@@ -215,15 +217,15 @@ class Events extends Component {
             <form>
               <div className="form_control">
                 <label htmlFor="title">Title</label>
-                <input type="text" id="title" ref={this.titleElRef}></input>
+                <input type="text" id="title" ref={this.titleElRef} />
               </div>
               <div className="form_control">
                 <label htmlFor="price">Price</label>
-                <input type="number" id="price" ref={this.priceElRef}></input>
+                <input type="number" id="price" ref={this.priceElRef} />
               </div>
               <div className="form_control">
                 <label htmlFor="date">Date</label>
-                <input type="date" id="date" ref={this.dateElRef}></input>
+                <input type="date" id="date" ref={this.dateElRef} />
               </div>
               <div className="form_control">
                 <label htmlFor="description">Description</label>
@@ -231,32 +233,44 @@ class Events extends Component {
                   id="description"
                   rows="4"
                   ref={this.descriptionElRef}
-                ></textarea>
+                />
               </div>
             </form>
           </Modal>
         )}
-        {this.state.selectedEvent && <Modal
-          title={this.state.selectedEvent.title}
-          canCancel
-          onCancel={this.modalCancelHandler}
-          canConfirm
-          onConfirm={this.bookEvendHandler}
-          confirmText={this.context.token ? "Book" : "Confirm"}
-        >
-        <h1>{this.state.selectedEvent.title}</h1>
-        <h2>${this.state.selectedEvent.price} - {this.state.selectedEvent.date}</h2>
-        <p>{this.state.selectedEvent.description}</p>
-        </Modal>}
-        {this.context.token && <div className="events-control">
-          <p>Add events </p>
-          <button className="btn" onClick={this.startCreateEventHandler}>
-            Create Event
-          </button>
-      </div>}
-      {this.state.isLoading ? <Spinner /> :
-          <EventList events={this.state.events}
-                     onViewDetail={this.showDetailHandler}/>}
+        {this.state.selectedEvent && (
+          <Modal
+            title={this.state.selectedEvent.title}
+            canCancel
+            onCancel={this.modalCancelHandler}
+            canConfirm
+            onConfirm={this.bookEvendHandler}
+            confirmText={this.context.token ? "Book" : "Confirm"}
+          >
+            <h1>{this.state.selectedEvent.title}</h1>
+            <h2>
+              ${this.state.selectedEvent.price} -{" "}
+              {this.state.selectedEvent.date}
+            </h2>
+            <p>{this.state.selectedEvent.description}</p>
+          </Modal>
+        )}
+        {this.context.token && (
+          <div className="events-control">
+            <p>Add events </p>
+            <button className="btn" onClick={this.startCreateEventHandler}>
+              Create Event
+            </button>
+          </div>
+        )}
+        {this.state.isLoading ? (
+          <Spinner />
+        ) : (
+          <EventList
+            events={this.state.events}
+            onViewDetail={this.showDetailHandler}
+          />
+        )}
       </React.Fragment>
     );
   }

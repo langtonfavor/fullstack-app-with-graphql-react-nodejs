@@ -1,0 +1,16 @@
+.booking__item {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  width: 40rem;
+  max-width: 90%;
+}
+
+.booking_item_data {
+  margin: 0.5rem 0;
+  padding: 0.5;
+  border: 3px solid green;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
