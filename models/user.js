@@ -28,7 +28,7 @@ const userSchema = new Schema({
     contact: {
         type: Number,
         required: true,
-        default:''
+        default: 0
     },
 
     isDeleted: {
@@ -38,15 +38,20 @@ const userSchema = new Schema({
 
     account: {
         accountBal: {
-         type: Number
+         type: Number,
+         default: 0
         },
         accountWithdrawn: {
-            type: Number
+            type: Number,
+            default: 0
         },
        accountBal: {
-            type: Number
+            type: Number,
+            default: 0
        }
     }   
 })
+
+
 
 module.exports = mongoose.model('User', userSchema);

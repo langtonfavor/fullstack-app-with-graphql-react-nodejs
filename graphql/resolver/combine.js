@@ -54,6 +54,14 @@ const eventsTemplate = (event) => {
   };
 };
 
+const userTemplate = (u) => {
+  return {
+    ...u._doc,
+    _id: u.id,
+    date: dateToString(u._doc.date)    
+  };
+};
+
 const bookingTemplate = (booking) => {
   return {
     ...booking._doc,

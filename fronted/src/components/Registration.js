@@ -72,21 +72,13 @@ onSubmit = (event) => {
       headers: {
         "Content-Type": "application/json",
       },
-    })
-      /* .then((res) => {
+    }) 
+     .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
           throw new Error("failed");
         }
-        return res.json();
-      }) */
-      /* .then((resBody) => {
-        if (resBody.data.login.token) {
-          this.context.login(
-            resBody.data.login.token,
-            resBody.data.login.userId
-          );
-        }
-      }) */
+        return window.location.href="/auth"//res.json();
+      }) 
       .catch((err) => {
         console.log(err);
       });

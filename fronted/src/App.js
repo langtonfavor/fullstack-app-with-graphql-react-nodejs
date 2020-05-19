@@ -43,7 +43,7 @@ class App extends Component {
                 )}
                 
                 {!this.state.token && (
-                  <Redirect from="/booking" to="/" exact />
+                  <Redirect from="/bookings" to="/" exact />
                 )}
                 {this.state.token && <Redirect from="/" to="/events" exact />}
                 {this.state.token && (
@@ -57,7 +57,7 @@ class App extends Component {
                 )}
                 <Route path="/events" component={EventsPage} />
                 {this.state.token && (
-                  <Route path="/booking" component={BookingPage} />
+                  <Route path="/bookings" component={BookingPage} />
                 )}
                 <Route path />
               </Switch>
