@@ -21,15 +21,18 @@ type Event {
 
 type User {
     _id: ID!
+    firstName:String!
+    lastName: String!
     email: String!
     password: String!
+    contact:String!
     createdEvents: [Event!]
 }
 
 type authData {
     userId:ID!
     token:String!
-    tokenExpiriation: Int!
+    tokenExpiriation: Float!
 }
 
 
@@ -41,6 +44,9 @@ input EventInput {
 }
 
 input UserInput {
+    firstName:String!
+    lastName: String!
+    contact:String!
     email: String!
     password: String!
 }

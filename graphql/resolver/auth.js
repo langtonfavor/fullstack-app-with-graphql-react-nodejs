@@ -2,8 +2,10 @@ const bcrypt = require('bcryptjs');
 const User = require('../../models/user');
 const jwt = require('jsonwebtoken');
 
+const userSession = require('../../models/userSession'); 
+
 module.exports = {
-  createUser: async args => {
+  createUser: async (args) => {
       try{
         const existingUser = await User.findOne( { email: args.userInput.email } )
         if(existingUser) {
@@ -12,10 +14,19 @@ module.exports = {
                 const hashedPassowrd = await bcrypt.hash(args.userInput.password, 15);
 
                 const user = new User({
+                    firstName: args.userInput.firstName,
+                    lastName: args.userInput.lastName,
+                    contact: args.userInput.contact,
                     email: args.userInput.email,
                     password: hashedPassowrd
                 });
+
           const result =  await user.save();
+
+          const usersession = new userSession();
+          usersession.userId = user._id;
+          usersession.save(); 
+          
             return {
               ...result._doc,
                _id: result.id
@@ -24,6 +35,7 @@ module.exports = {
             throw err;
       }
   },
+
   login: async ({ email, password}) => {
       const user = await User.findOne({ email: email })
           if(!user) {

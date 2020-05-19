@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "bootstrap": "^4.5.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-config-prettier": "^6.10.1",
@@ -16,9 +17,12 @@
     "node-sass-chokidar": "^1.4.0",
     "prettier": "^2.0.4",
     "react": "^16.13.1",
+    "react-bootstrap": "^0.33.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-social-login-buttons": "^3.1.0",
+    "reactstrap": "^8.4.1"
   },
   "scripts": {
     "build-css": "node-sass-chokidar src/ -o src/",

@@ -1,39 +1,43 @@
+
 import React, { Component } from "react";
 import authContext from "../context/authContext";
+import { Form, FormGroup, Label, Button, Input } from "reactstrap";
+import { FacebookLoginButton } from "react-social-login-buttons";
+
 import "./auth.css";
 
 class AuthPage extends Component {
   state = {
+    isLoading: false,
     isLogin: true,
+    emailId: "",
+    password: "",
   };
 
   static contextType = authContext;
 
   constructor(props) {
     super(props);
-
-    this.emailEl = React.createRef();
-    this.passwordEl = React.createRef();
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  switchHandler = () => {
-    this.setState((previousState) => {
-      return { isLogin: !previousState.isLogin };
-    });
-  };
-  submitHandler = (event) => {
+  setUsername = (event) => {
     event.preventDefault();
-    const email = this.emailEl.current.value;
-    const password = this.passwordEl.current.value;
+    this.setState({ emailId: event.target.value });
+  };
 
-    if (email.trim().length === 0 || password.trim().length === 0) {
-      return;
-    }
+  setPassword = (event) => {
+    event.preventDefault();
+    this.setState({ password: event.target.value });
+  };
 
+  onSubmit = (event) => {
+    event.preventDefault();
     let reqQuery = {
+
       query: `
             query {
-                login(email: "${email}", password: "${password}") {
+                login(email: "${this.state.emailId}", password: "${this.state.password}") {
                     userId
                     token
                 }
@@ -44,7 +48,7 @@ class AuthPage extends Component {
       reqQuery = {
         query: `
                 mutation {
-                    createUser(userInput: {email: "${email}", password: "${password}"}) {
+                    createUser(userInput: {email: "${this.state.emailId}", password: "${this.state.password}"}) {
                         _id
                         email
                     }
@@ -61,9 +65,9 @@ class AuthPage extends Component {
       },
     })
       .then((res) => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error("failed");
-        }
+        // if (res.status !== 200 && res.status !== 201) {
+        //   throw new Error(err);
+        // }
         return res.json();
       })
       .then((resBody) => {
@@ -81,24 +85,41 @@ class AuthPage extends Component {
 
   render() {
     return (
-      <form className="auth_form" onSubmit={this.submitHandler}>
-        <div className="form-control">
-          <label htmlFor="email">E-mail</label>
-          <input type="text" id="email" ref={this.emailEl} />
-        </div>
+      <Form className="login-form" onSubmit={this.onSubmit}>
+        <h1>
+          <span className="font-weight-bold">login</span>
+        </h1>
 
-        <div className="form-control">
-          <label htmlFor="password">password</label>
-          <input type="text" id="password" ref={this.passwordEl} />
+        <FormGroup>
+          <Label>Email</Label>
+          <Input
+            type="emailId"
+            id="email"
+            onChange={(e) => this.setUsername(e)}
+            name="email"
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>password</Label>
+          <Input
+            type="text"
+            id="password"
+            onChange={(e) => this.setPassword(e)}
+          />
+        </FormGroup>
+        <Button className="btn-lg btn-dark  btn-block"
+         onClick={this.onSubmit}
+         >
+          Sign In.
+        </Button>
+        <div className="text-center pt-3">Or continue with facebook</div>
+        <FacebookLoginButton className="mt-3 mb-3" />
+        <div className="text-center">
+          <a href="/register">Sign up</a>
+          <span className="p-2">|</span>
+          <a href="/forgot-password">Forgot password</a>
         </div>
-
-        <div className="form_actions">
-          <button type="submit">SignIn</button>
-          <button type="button" onClick={this.switchHandler}>
-            Switch to {this.state.isLogin ? "signup" : "login"}
-          </button>
-        </div>
-      </form>
+      </Form>
     );
   }
 }
